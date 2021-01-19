@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "450091595164",
+    "firebase_url": "https://chatroom-app09-default-rtdb.firebaseio.com",
+    "project_id": "chatroom-app09",
+    "storage_bucket": "chatroom-app09.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:450091595164:android:dacd546cc1037e74834459",
+        "android_client_info": {
+          "package_name": "com.example.app09"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "450091595164-mrkh7f3nutiknjpiqduhssv17spaoegg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdc6CoTI1cBXG4GSi1BGMT5kPAvaHHApo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "450091595164-mrkh7f3nutiknjpiqduhssv17spaoegg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:450091595164:android:484285fab7f05a75834459",
+        "android_client_info": {
+          "package_name": "com.example.chatapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "450091595164-mrkh7f3nutiknjpiqduhssv17spaoegg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdc6CoTI1cBXG4GSi1BGMT5kPAvaHHApo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "450091595164-mrkh7f3nutiknjpiqduhssv17spaoegg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:450091595164:android:94a9df1421b8378a834459",
+        "android_client_info": {
+          "package_name": "com.google.firebase.codelab.friendlychat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "450091595164-mrkh7f3nutiknjpiqduhssv17spaoegg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdc6CoTI1cBXG4GSi1BGMT5kPAvaHHApo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "450091595164-mrkh7f3nutiknjpiqduhssv17spaoegg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
