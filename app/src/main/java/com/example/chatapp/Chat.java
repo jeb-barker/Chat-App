@@ -124,85 +124,58 @@ public class Chat extends AppCompatActivity {
 
         reference1.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            public synchronized void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                Map map = dataSnapshot.getValue(Map.class);
-                String message = map.get("message").toString();
-                String userName = map.get("user").toString();
-                String imageURL = map.get("image").toString();
+                synchronized (this) {
+                    Map map = dataSnapshot.getValue(Map.class);
+                    String message = map.get("message").toString();
+                    String userName = map.get("user").toString();
+                    String imageURL = map.get("image").toString();
 
 
-                final StorageReference[] picRef = new StorageReference[1];
+                    final StorageReference[] picRef = new StorageReference[1];
 
-                CountDownLatch done = new CountDownLatch(1);
+                    CountDownLatch done = new CountDownLatch(1);
 
-                if(!imageURL.equals("")){
-
-                    picRef[0] = mStorageRef.child(imageURL.substring(1));
-
-                    picRef[0].getBytes(1024 * 1024 * 50).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                    @Override
-                    public void onSuccess(byte[] bytes) {
-                        // Data for "some super long file path" is returned
-                        getBM(bytes);
-
-                        if(userName.equals(UserDetails.username)){
-                            if(bm != null){
-                                addImageBox(1);
-                            }
-                            else {
-                                addMessageBox("You:\n" + message, 1);
-                            }
+                    if (!imageURL.equals("")) {
+                        ImageView im;
+                        if (userName.equals(UserDetails.username)) {
+                            im = addImageBox(1);
+                        } else {
+                            im = addImageBox(2);
                         }
-                        else{
-                            if(bm != null){
-                                addImageBox(2);
+//                        CountDownLatch done = new CountDownLatch(1);
+//                        dialog.setMessage("Loading...");
+//                        dialog.show();
+
+                        picRef[0] = mStorageRef.child(imageURL.substring(1));
+
+                        picRef[0].getBytes(1024 * 1024 * 50).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                            @Override
+                            public void onSuccess(byte[] bytes) {
+                                // Data for "some super long file path" is returned
+                                getBM(bytes);
+                                im.setImageBitmap(Bitmap.createScaledBitmap(bm, 500, 500, false));
+                                scrollView.fullScroll(View.FOCUS_DOWN);
+                                //done.countDown();
+                                //dialog.dismiss();
                             }
-                            else {
-                                addMessageBox(UserDetails.chatWith + ":\n" + message, 2);
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+
                             }
+                        });
+                    }
+                    else {
+                        if (userName.equals(UserDetails.username)) {
+                            addMessageBox("You:\n" + message, 1);
+                        } else {
+                            addMessageBox(UserDetails.chatWith + ":\n" + message, 2);
                         }
                         scrollView.fullScroll(View.FOCUS_DOWN);
-                        done.countDown();
                     }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-
-                        }
-                    });
                 }
-                else{
-                    try {
-                        done.await(); //it will wait till the response is received from firebase.
-                    } catch(InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                    if (userName.equals(UserDetails.username)) {
-                        addMessageBox("You:\n" + message, 1);
-                    } else {
-                        addMessageBox(UserDetails.chatWith + ":\n" + message, 2);
-                    }
-                    scrollView.fullScroll(View.FOCUS_DOWN);
-                }
-
-//                ImageRequest request = new ImageRequest(url[0].getPath(),
-//                        new Response.Listener<Bitmap>() {
-//                            @Override
-//                            public void onResponse(Bitmap bitmap) {
-//                                bm[0] = bitmap;
-//                            }
-//                        }, 0, 0, null,
-//                        new Response.ErrorListener() {
-//                            @Override
-//                            public void onErrorResponse(VolleyError error) {
-//                            }
-//                        });
-//                RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-//                requestQueue.add(request);
-
-
             }
 
             @Override
@@ -226,19 +199,17 @@ public class Chat extends AppCompatActivity {
             }
         });
     }
-    public void addImageBox(int type){
+    public ImageView addImageBox(int type){
         ImageView imageView = new ImageView(Chat.this);
-        imageView.setImageBitmap(Bitmap.createScaledBitmap(bm, 500, 500, false));
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         //lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        bm = null;
         if(type == 1) {
-            //lp.setMargins(300, 5, 5, 30);
+            lp.setMargins(200, 5, 5, 30);
             imageView.setLayoutParams(lp);
             //imageView.setBackgroundResource(R.drawable.rounded_corner1);
         }
         else{
-            //lp.setMargins(5, 5, 300, 30);
+            lp.setMargins(5, 5, 200, 30);
             imageView.setLayoutParams(lp);
             //imageView.setBackgroundResource(R.drawable.rounded_corner2);
         }
@@ -246,6 +217,7 @@ public class Chat extends AppCompatActivity {
         layout.addView(imageView);
 
         scrollView.fullScroll(View.FOCUS_DOWN);
+        return imageView;
     }
     public void getBM(byte[] bytes){
 
