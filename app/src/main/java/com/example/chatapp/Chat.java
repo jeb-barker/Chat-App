@@ -6,6 +6,8 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.RectF;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -64,7 +66,6 @@ public class Chat extends AppCompatActivity {
     EditText messageArea;
     ScrollView scrollView;
     Firebase reference1, reference2;
-    private ProgressDialog dialog;
     StorageReference mStorageRef;
     FirebaseAuth mAuth;
     Bitmap bm;
@@ -84,10 +85,11 @@ public class Chat extends AppCompatActivity {
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
         scrollView.fullScroll(View.FOCUS_DOWN);
-        dialog = new ProgressDialog(Chat.this);
         Firebase.setAndroidContext(this);
         reference1 = new Firebase("https://chatroom-app09-default-rtdb.firebaseio.com//messages/" + UserDetails.username + "_" + UserDetails.chatWith);
         reference2 = new Firebase("https://chatroom-app09-default-rtdb.firebaseio.com//messages/" + UserDetails.chatWith + "_" + UserDetails.username);
+
+        setTitle("Chat with " + UserDetails.chatWith);
 
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
@@ -155,7 +157,7 @@ public class Chat extends AppCompatActivity {
                             public void onSuccess(byte[] bytes) {
                                 // Data for "some super long file path" is returned
                                 getBM(bytes);
-                                im.setImageBitmap(Bitmap.createScaledBitmap(bm, 500, 500, false));
+                                im.setImageBitmap(scaleBitmapAndKeepRation(bm, 1000, 1000));
                                 scrollView.fullScroll(View.FOCUS_DOWN);
                                 //done.countDown();
                                 //dialog.dismiss();
@@ -261,6 +263,14 @@ public class Chat extends AppCompatActivity {
         // Save a file: path for use with ACTION_VIEW intents
         currentPhotoPath = image.getAbsolutePath();
         return image;
+    }
+
+    public static Bitmap scaleBitmapAndKeepRation(Bitmap targetBmp,int reqHeightInPixels,int reqWidthInPixels)
+    {
+        Matrix matrix = new Matrix();
+        matrix .setRectToRect(new RectF(0, 0, targetBmp.getWidth(), targetBmp.getHeight()), new RectF(0, 0, reqWidthInPixels, reqHeightInPixels), Matrix.ScaleToFit.CENTER);
+        Bitmap scaledBitmap = Bitmap.createBitmap(targetBmp, 0, 0, targetBmp.getWidth(), targetBmp.getHeight(), matrix, true);
+        return scaledBitmap;
     }
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
